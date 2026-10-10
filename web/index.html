@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prahari · Ward 4B</title>
+  <meta name="description" content="Ward-scale cardiac digital twin: a central station for a heart-failure step-down ward.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%236246ea'/%3E%3Cpath d='M4 17h5.5l3-7.5 5 14 3.5-9.5 2 3H28' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/fonts/fonts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Sections">
+    <a class="logo" href="#" title="Prahari — ward overview" data-icon="pulse"></a>
+    <a class="nav" data-nav="wall" href="#"><span data-icon="grid"></span>Ward</a>
+    <a class="nav" data-nav="evidence" href="#evidence"><span data-icon="chart"></span>Evidence</a>
+    <a class="nav" data-nav="handover" href="#handover"><span data-icon="clipboard"></span>Handover</a>
+    <div class="grow"></div>
+    <button class="nav" id="btn-theme" type="button" title="Switch day / night display"><span data-icon="moon"></span><span class="lab">Night</span></button>
+  </nav>
+
+  <div class="main">
+    <header class="top">
+      <div class="title">
+        <div class="crumbs" id="crumbs"></div>
+        <h1 id="page-title">Ward 4B</h1>
+      </div>
+      <div class="tools">
+        <div class="clock" id="clock" aria-live="off" title="Simulated ward clock">
+          <span class="dot"></span><span id="clock-day">Day 1</span><b id="clock-time">--:--</b>
+        </div>
+        <button class="btn primary" id="btn-live" aria-pressed="false" title="Run the ward clock (Space)"></button>
+        <span class="tool-label">Speed</span>
+        <div class="seg" id="speed" role="group" aria-label="Clock speed">
+          <button data-v="1" title="One simulated minute per second">1 min/s</button><button data-v="2" class="on" title="Five simulated minutes per second">5 min/s</button><button data-v="3" title="Twenty simulated minutes per second">20 min/s</button>
+        </div>
+        <span class="tool-label">Vitals feed</span>
+        <div class="seg" id="cadence" role="group" aria-label="How often the bedside monitor's readings reach the twin">
+          <button data-v="4" class="on" title="Charted by hand every four hours">4-hourly</button><button data-v="1" title="A networked monitor, hourly">Hourly</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="view-wall" aria-label="Ward overview">
+      <div class="kpis" id="kpis"></div>
+      <div class="ward-layout">
+        <section class="board" aria-label="Beds">
+          <div class="board-head">
+            <label class="search"><span data-icon="search"></span><input id="ward-q" type="search" placeholder="Search name, bed or diagnosis" autocomplete="off"></label>
+            <div class="seg" id="filter" role="group" aria-label="Filter beds">
+              <button data-v="all" class="on">All <span class="n" data-n="all"></span></button>
+              <button data-v="alert">Needs action <span class="n" data-n="alert"></span></button>
+              <button data-v="watch">Watch <span class="n" data-n="watch"></span></button>
+              <button data-v="ok">Stable <span class="n" data-n="ok"></span></button>
+            </div>
+            <div class="grow"></div>
+            <div class="seg" id="sort" role="group" aria-label="Sort beds">
+              <button data-v="priority" class="on">Priority</button><button data-v="bed">Bed no.</button>
+            </div>
+            <div class="seg icons" id="layout" role="group" aria-label="Layout">
+              <button data-v="grid" class="on" title="Cards with live traces"><span data-icon="grid"></span></button>
+              <button data-v="list" title="Table"><span data-icon="rows"></span></button>
+            </div>
+          </div>
+          <div class="grid" id="grid"></div>
+          <div class="roster-wrap" id="roster" hidden>
+            <table class="data roster">
+              <thead><tr>
+                <th>Bed</th><th>Patient</th><th>NEWS2</th><th>Twin reads</th>
+                <th>HR</th><th>BP</th><th>SpO<sub>2</sub></th><th>RR</th>
+                <th>Cold-wet</th><th>Suggested</th><th>Twin</th>
+              </tr></thead>
+              <tbody id="roster-body"></tbody>
+            </table>
+          </div>
+          <div class="empty" id="board-empty" hidden>No bed matches this search.</div>
+        </section>
+
+        <aside class="side">
+          <section class="card">
+            <div class="card-h"><h3>Action queue</h3><span class="count" id="queue-count"></span><span class="grow"></span><small>NEWS2 → twin → action</small></div>
+            <div class="queue-list" id="queue"></div>
+            <p class="tally" id="tally"></p>
+          </section>
+          <section class="card">
+            <div class="card-h"><h3>Ward by profile</h3><small>as the twins read it</small></div>
+            <div class="mix" id="mix"></div>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <section id="view-patient" hidden></section>
+    <section id="view-evidence" hidden></section>
+    <section id="view-handover" hidden></section>
+
+    <footer class="foot">
+      <span>Simulated ward · synthetic patients · not a medical device. Prahari allocates attention — it does not issue orders.</span>
+      <span><kbd>←</kbd> <kbd>→</kbd> step a charting round · <kbd>Space</kbd> run clock · <kbd>Esc</kbd> back to ward</span>
+    </footer>
+  </div>
+</div>
+
+<script src="/static/js/charts.js"></script>
+<script src="/static/js/waves.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>
