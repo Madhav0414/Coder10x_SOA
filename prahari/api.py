@@ -11,7 +11,11 @@ All times in responses are absolute hours from admission.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import os
+import pickle
+import threading
 import zlib
 from contextlib import asynccontextmanager
 from dataclasses import replace
@@ -68,16 +72,81 @@ def _raw_ward(seed: int, cadence: float):
     return build_ward(n_beds=8, seed=seed, history_h=HISTORY_H, cadence_h=cadence)
 
 
-@lru_cache(maxsize=48)
+ROUNDS = ROOT / ".cache" / "rounds"
+_round_locks: dict = {}
+_round_locks_guard = threading.Lock()
+
+
+@lru_cache(maxsize=1)
+def _code_stamp() -> str:
+    """Changes whenever the model code does, so stale saved rounds are ignored."""
+    h = hashlib.sha1()
+    for p in sorted((ROOT / "prahari").rglob("*.py")):
+        h.update(p.read_bytes())
+    return h.hexdigest()[:12]
+
+
+def _round_file(seed, cadence, reveal, horizon) -> Path:
+    return ROUNDS / f"{_code_stamp()}-s{seed}-c{cadence:g}-r{reveal}-h{horizon:g}.pkl"
+
+
 def _ward(seed: int, cadence: float, reveal: int, horizon: float):
     """Twins fitted on what was charted by this round, carried forward to it,
-    ranked.  Each row: (patient, twin_now, entry, visible, round_clock)."""
+    ranked.  Each row: (patient, twin_now, entry, visible, round_clock).
+
+    Two requests for the same unfitted round wait for one fit rather than
+    running it twice; on a small server one round can take a minute.
+    """
+    key = (int(seed), float(cadence), int(reveal), float(horizon))
+    with _round_locks_guard:
+        lock = _round_locks.setdefault(key, threading.Lock())
+    with lock:
+        return _fitted_round(*key)
+
+
+@lru_cache(maxsize=48)
+def _fitted_round(seed: int, cadence: float, reveal: int, horizon: float):
     clock = reveal * cadence
-    rows = [(wp, tw, entry, visible, clock)
-            for wp, tw, entry, visible in fit_ward_at(_raw_ward(seed, cadence), clock, horizon)]
+    patients = _raw_ward(seed, cadence)
+    saved = _round_file(seed, cadence, reveal, horizon)
+    try:
+        fits = pickle.loads(zlib.decompress(saved.read_bytes()))
+        fits = [(wp, tw, entry, [o for o in wp.observations if o.t <= clock + 1e-9] or wp.observations[:1])
+                for wp, (tw, entry) in zip(patients, fits)]
+    except (OSError, ValueError, pickle.UnpicklingError, zlib.error, EOFError):
+        fits = fit_ward_at(patients, clock, horizon)
+    rows = [(wp, tw, entry, visible, clock) for wp, tw, entry, visible in fits]
     order = {e.bed: i for i, e in enumerate(rank_ward([r[2] for r in rows]))}
     rows.sort(key=lambda r: order[r[2].bed])
     return rows
+
+
+def save_rounds(seed: int = DEFAULTS["seed"], horizon: float = DEFAULTS["horizon"]) -> None:
+    """Fit every round of the opening ward ahead of time and keep them on disk.
+
+    The deploy runs this during its build: a free server's CPU is slow enough
+    that fitting the hourly feed live would leave visitors waiting.
+    """
+    ROUNDS.mkdir(parents=True, exist_ok=True)
+    for old in ROUNDS.glob("*.pkl"):
+        if not old.name.startswith(_code_stamp()):
+            old.unlink()
+    for cadence in (4.0, 1.0):                          # the 4-hourly view opens first
+        for reveal in range(int(HISTORY_H // cadence) + 1):
+            if save_round(seed, cadence, reveal, horizon):
+                print(f"  round {reveal:2d} of the {cadence:g}-hourly feed saved", flush=True)
+
+
+def save_round(seed: int, cadence: float, reveal: int, horizon: float) -> bool:
+    out = _round_file(seed, cadence, reveal, horizon)
+    if out.exists():
+        return False
+    fits = fit_ward_at(_raw_ward(seed, cadence), reveal * cadence, horizon)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    tmp = out.with_suffix(".tmp")
+    tmp.write_bytes(zlib.compress(pickle.dumps([(tw, entry) for _, tw, entry, _ in fits])))
+    os.replace(tmp, out)                              # a build cut short leaves no half file
+    return True
 
 
 def _get(seed, cadence, reveal, horizon, bed: int | None = None):

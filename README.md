@@ -16,7 +16,7 @@ A digital twin per bed for heart-failure wards, and for the patient after they g
 | **College** | SOA |
 | **Condition** | Chronic heart failure |
 | **Predicts** | Decompensation: hours ahead on the ward, days ahead at home |
-| **Live demo** | `[LIVE DEMO LINK]` (free hosting: after a quiet spell the first visit takes about a minute) |
+| **Live demo** | [prahari-nk6g.onrender.com](https://prahari-nk6g.onrender.com) (free hosting: after a quiet spell the first visit takes about a minute) |
 | **Demo video** | [youtu.be/CLIIcmpJKTY](https://youtu.be/CLIIcmpJKTY) |
 | **Architecture** | [docs/architecture.pdf](docs/architecture.pdf) |
 | **Slides** | [docs/presentation.pdf](docs/presentation.pdf) |
@@ -96,7 +96,7 @@ python scripts/build_docs.py          # rebuilds the PDFs from those results
 
 Without the datasets the app still runs, and labels the home data as simulated.
 
-To put it online, `render.yaml` deploys it on Render's free plan: New → Blueprint → this repository.
+To put it online, `render.yaml` deploys it on Render's free plan: New → Blueprint → this repository. The build fits every round of the opening ward ahead of time and keeps them in `.cache/rounds/`, because a free server's CPU is slow enough that fitting them live would leave visitors waiting.
 
 ## How it works
 

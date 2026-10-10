@@ -79,3 +79,21 @@ def test_discharge_forecasts_days_and_labels_every_channel(client):
     later = client.get("/api/discharge/6", params={"reveal": 4, "course": "decompensating",
                                                    "upto": r["totalDays"]}).json()
     assert later["estimate"]["fluidL"] >= r["estimate"]["fluidL"]
+
+
+def test_a_saved_round_answers_like_a_live_fit(client, tmp_path, monkeypatch):
+    """Deploys fit the rounds during the build and keep them on disk; a visitor
+    must see the same ward from a saved round as from a live fit."""
+    from prahari import api
+
+    live = client.get("/api/ward", params={"reveal": 2}).json()
+    monkeypatch.setattr(api, "ROUNDS", tmp_path)
+    assert api.save_round(7, 4.0, 2, 12.0)
+    api._fitted_round.cache_clear()
+
+    def no_fitting(*a, **k):
+        raise AssertionError("the saved round should have been used")
+    monkeypatch.setattr(api, "fit_ward_at", no_fitting)
+    saved = client.get("/api/ward", params={"reveal": 2}).json()
+    api._fitted_round.cache_clear()
+    assert saved == live

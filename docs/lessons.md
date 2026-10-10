@@ -42,3 +42,9 @@ was run; the alarm threshold was fixed in advance and not tuned afterwards.
 **Two simulations at once.** SciPy's LSODA integrator cannot run two problems
 concurrently, and the API answers requests on a thread pool. A ward refit and a
 what-if arriving together crashed one of them. Integrations now take turns.
+
+**A demo server too slow to fit live.** On a free hosting plan one round of the
+hourly feed took up to two minutes to fit, and a visitor who switched feeds and
+then opened a patient waited behind it; two requests for the same round also
+ran the fit twice. Deploys now fit every round of the opening ward during the
+build and load them from disk, and concurrent requests for a round share one fit.
