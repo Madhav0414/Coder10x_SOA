@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Prahari — presentation</title>
+<link rel="stylesheet" href="../../web/fonts/fonts.css">
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  :root {
+    --bg: #04070a; --panel: #0a1016; --line: #1b2632; --ink: #e6edf3; --ink2: #9fb0bf; --dim: #5f6f7e;
+    --ecg: #2be374; --art: #ff4b4b; --spo2: #38c6ff; --resp: #ffd23c; --hi: #ff2b3b; --med: #ffae1a; --ql: #5b9dff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 400 20px/1.45 "IBM Plex Sans", sans-serif; -webkit-font-smoothing: antialiased; }
+  .slide {
+    width: 1280px; height: 720px; position: relative; overflow: hidden;
+    padding: 64px 80px; page-break-after: always; break-after: page;
+    background: var(--bg);
+  }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  .kicker { font: 600 14px "IBM Plex Mono", monospace; letter-spacing: .16em; color: var(--dim); text-transform: uppercase; }
+  h1 { font: 700 76px/1.02 "Barlow Condensed", sans-serif; letter-spacing: .01em; margin: 14px 0 0; }
+  h2 { font: 700 50px/1.06 "Barlow Condensed", sans-serif; margin: 14px 0 26px; max-width: 1080px; }
+  p { margin: 0 0 14px; color: var(--ink2); max-width: 900px; }
+  b, strong { color: var(--ink); font-weight: 600; }
+  .foot { position: absolute; left: 80px; right: 80px; bottom: 30px; display: flex; justify-content: space-between;
+          font: 500 12px "IBM Plex Mono", monospace; letter-spacing: .12em; color: var(--dim); }
+  .num { font: 700 110px/0.9 "Barlow Condensed", sans-serif; }
+  .num.m { font-size: 84px; }
+  .lab { font: 500 15px/1.4 "IBM Plex Mono", monospace; color: var(--ink2); letter-spacing: .02em; margin-top: 10px; }
+  .grid { display: grid; gap: 28px; }
+  .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+  .card { background: var(--panel); border: 1px solid var(--line); padding: 22px 24px; }
+  .shot { width: 100%; border: 1px solid var(--line); display: block; }
+  .pill { display: inline-block; font: 700 15px "Barlow Condensed", sans-serif; letter-spacing: .1em; padding: 5px 10px;
+          border: 1.5px solid currentColor; border-radius: 3px; }
+  table { border-collapse: collapse; width: 100%; font-size: 18px; }
+  th { text-align: left; font: 600 12.5px "IBM Plex Mono", monospace; letter-spacing: .1em; color: var(--dim); padding: 8px 12px; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px; border-bottom: 1px solid var(--line); color: var(--ink2); }
+  td.r { text-align: right; font-family: "IBM Plex Mono", monospace; color: var(--ink); }
+  .trace { position: absolute; left: 0; right: 0; bottom: 110px; height: 90px; opacity: .9; }
+  .quote { font: 400 26px/1.45 "IBM Plex Sans", sans-serif; color: var(--ink); border-left: 3px solid var(--ecg); padding-left: 22px; max-width: 980px; }
+  .muted { color: var(--dim); }
+</style>
+</head>
+<body>
+
+<!-- 1 ─ title -->
+<section class="slide">
+  <div class="kicker">Open-source clinical decision support</div>
+  <h1 style="font-size:132px;margin-top:70px;letter-spacing:.08em">PRAHARI</h1>
+  <p style="font-size:30px;color:var(--ink);margin-top:10px">A digital twin per bed, for the cardiac step-down ward at night.</p>
+  <p style="font-size:20px">प्रहरी — the one who keeps watch</p>
+  <svg class="trace" viewBox="0 0 1280 90" preserveAspectRatio="none"><path d="M0 60 H210 l12-38 14 70 12-52 8 20 H520 l12-38 14 70 12-52 8 20 H830 l12-38 14 70 12-52 8 20 H1280" fill="none" stroke="#2be374" stroke-width="2.4" stroke-linejoin="round"/></svg>
+  <div class="foot"><span>{{TEAM}}</span><span>{{COLLEGE}}</span></div>
+</section>
+
+<!-- 2 ─ problem -->
+<section class="slide">
+  <div class="kicker">The ward we are building for</div>
+  <h2>One doctor. Eight failing hearts. A chart every four hours.</h2>
+  <div class="grid g3" style="margin-top:34px">
+    <div><div class="num" style="color:var(--hi)">1 : 75</div><div class="lab">intensivists to ICU beds in India — and the wards below the ICU get less</div></div>
+    <div><div class="num" style="color:var(--med)">4 h</div><div class="lab">between charted vitals on a typical step-down ward; no continuous telemetry recorded</div></div>
+    <div><div class="num" style="color:var(--resp)">30.8%</div><div class="lab">one-year mortality after an acute heart-failure admission, Trivandrum HF Registry</div></div>
+  </div>
+  <p style="margin-top:44px">Heart-failure patients deteriorate over hours, not seconds — slowly enough to act on, quietly enough to miss between rounds.</p>
+  <div class="foot"><span>Sources: ISCCM · Trivandrum Heart Failure Registry</span><span>2</span></div>
+</section>
+
+<!-- 3 ─ NEWS2 -->
+<section class="slide">
+  <div class="kicker">What the ward already has</div>
+  <h2>NEWS2 says <em style="font-style:normal;color:var(--hi)">who</em> is sick. It can't say what kind — and in heart failure, that decides the drug.</h2>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card">
+      <span class="pill" style="color:var(--hi)">NEWS2 11</span>&nbsp;
+      <span class="pill" style="color:var(--hi)">C · COLD &amp; WET</span>
+      <p style="margin-top:16px;color:var(--ink)">Congested <b>and</b> underperfused.</p>
+      <p>Needs inotrope + diuretic, and escalation.</p>
+    </div>
+    <div class="card">
+      <span class="pill" style="color:var(--med)">NEWS2 5</span>&nbsp;
+      <span class="pill" style="color:var(--ql)">L · COLD &amp; DRY</span>
+      <p style="margin-top:16px;color:var(--ink)">Underperfused, <b>not</b> congested.</p>
+      <p>The reflex diuretic makes her worse. Hold it; cautious fluid.</p>
+    </div>
+  </div>
+  <p style="margin-top:30px">Both alarms fire. The right response is opposite. The ward has no instrument that tells them apart at 2 a.m.</p>
+  <div class="foot"><span>Nohria–Stevenson haemodynamic profiles</span><span>3</span></div>
+</section>
+
+<!-- 4 ─ what a twin is -->
+<section class="slide">
+  <div class="kicker">The idea</div>
+  <h2>A runnable copy of each patient's heart, fitted from the chart the nurse already keeps.</h2>
+  <div class="grid g4" style="margin-top:34px">
+    <div class="card"><div class="num m" style="color:var(--ecg)">1</div><p style="margin-top:10px"><b>State.</b> Contractility, resistance, volume, lung water — fitted to <em>this</em> patient.</p></div>
+    <div class="card"><div class="num m" style="color:var(--spo2)">2</div><p style="margin-top:10px"><b>Forward.</b> Simulates the next 12 hours as a trajectory, not a score.</p></div>
+    <div class="card"><div class="num m" style="color:var(--med)">3</div><p style="margin-top:10px"><b>Forks.</b> Give the drug now, in four hours, or not at all — three futures.</p></div>
+    <div class="card"><div class="num m" style="color:var(--resp)">4</div><p style="margin-top:10px"><b>Sync.</b> Re-fits at every reading; keeps running between them.</p></div>
+  </div>
+  <p style="margin-top:34px">The test of a twin: <b>can you ask it about a future that never happened?</b> A risk score can't.</p>
+  <div class="foot"><span>Physics core · lumped-parameter cardiovascular model</span><span>4</span></div>
+</section>
+
+<!-- 5 ─ architecture -->
+<section class="slide" style="padding:40px 64px">
+  <div class="kicker">How it works</div>
+  <img class="shot" src="../img/architecture.png" style="margin-top:14px;height:600px;width:auto;border:0" alt="Prahari architecture">
+  <div class="foot"><span>Static: the EHR · dynamic: the bedside monitor as charted, then a band and a scale at home · no catheter, no GPU</span><span>5</span></div>
+</section>
+
+<!-- 6 ─ station -->
+<section class="slide" style="padding:40px 64px">
+  <div class="kicker">The central station</div>
+  <img class="shot" src="../img/station.png" style="margin-top:14px;height:590px;width:auto" alt="Prahari central station">
+  <div class="foot"><span>Every bed: the twin's virtual patient, NEWS2 beside the twin's reading, ranked</span><span>6</span></div>
+</section>
+
+<!-- 7 ─ wait or act -->
+<section class="slide">
+  <div class="kicker">The question at the end of a shift</div>
+  <h2>"Can this wait until the morning round?"</h2>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="card"><div class="lab" style="color:var(--hi);margin:0">DO NOTHING</div><div class="num m" style="color:var(--hi);margin-top:8px">{{BED6_NOTHING}} h</div><div class="lab">cold-wet in the next 14 h</div></div>
+    <div class="card"><div class="lab" style="color:var(--med);margin:0">DIURETIC IN 4 H</div><div class="num m" style="color:var(--med);margin-top:8px">{{BED6_LATER}} h</div><div class="lab">she crosses before it lands</div></div>
+    <div class="card"><div class="lab" style="color:var(--ecg);margin:0">DIURETIC NOW</div><div class="num m" style="color:var(--ecg);margin-top:8px">{{BED6_NOW}} h</div><div class="lab">crossing pushed back</div></div>
+  </div>
+  <p class="quote" style="margin-top:36px">Bed 6's 22:00 reading was missed. The twin kept simulating, dropped its confidence, and projected cold-wet at midnight. Act before you leave.</p>
+  <div class="foot"><span>Computed live on the patient's twin</span><span>7</span></div>
+</section>
+
+<!-- 8 ─ evidence: state -->
+<section class="slide">
+  <div class="kicker">Evidence 1 · hidden state from a 4-hourly chart</div>
+  <h2>The twin estimates what the ward can't measure — without continuous monitoring.</h2>
+  <table style="margin-top:14px">
+    <tr><th>Charting</th><th style="text-align:right">Profile correct</th><th style="text-align:right">Wet vs dry</th><th style="text-align:right">Cold vs warm</th><th style="text-align:right">Cardiac index error</th><th style="text-align:right">Filling pressure error</th></tr>
+    <tr><td>Hourly</td><td class="r">{{ICU_Q}}</td><td class="r">{{ICU_WET}}</td><td class="r">{{ICU_COLD}}</td><td class="r">{{ICU_CI}}</td><td class="r">{{ICU_PCWP}}</td></tr>
+    <tr><td><b>4-hourly, by hand</b></td><td class="r">{{W_Q}}</td><td class="r">{{W_WET}}</td><td class="r">{{W_COLD}}</td><td class="r">{{W_CI}}</td><td class="r">{{W_PCWP}}</td></tr>
+  </table>
+  <p style="margin-top:28px">Same {{N_STATES}} patient-states in both rows. The fix that made it work was clinical, not mathematical: a BP cuff can't see filling pressure, so the twin reads the signs doctors already chart — JVP, oedema, weight for <b>wet</b>; capillary refill for <b>cold</b>.</p>
+  <div class="foot"><span>{{WARDS}} simulated wards · twin never sees ground truth</span><span>8</span></div>
+</section>
+
+<!-- 9 ─ evidence: counterfactuals -->
+<section class="slide">
+  <div class="kicker">Evidence 2 · are the what-ifs right?</div>
+  <h2>Every drug, given to the twin and to the true patient at the same moment.</h2>
+  <div class="grid g3" style="margin-top:22px">
+    <div><div class="num" style="color:var(--ecg)">{{DIR}}</div><div class="lab">drug effects predicted in the right direction ({{DIR_N}} comparisons)</div></div>
+    <div><div class="num" style="color:var(--spo2)">r {{CORR}}</div><div class="lab">predicted vs true change in cardiac index</div></div>
+    <div><div class="num" style="color:var(--med)">{{REGRET_X}}×</div><div class="lab">less decision regret than "give furosemide whenever NEWS2 fires"</div></div>
+  </div>
+  <table style="margin-top:34px;font-size:17px">
+    <tr><th>True profile</th><th style="text-align:right">Furosemide helps</th><th style="text-align:right">Furosemide harms</th><th style="text-align:right">Twin names the profile</th></tr>
+    {{HARM_ROWS}}
+  </table>
+  <div class="foot"><span>Checked against simulated patients' pharmacology · real-dose calibration pending (slide 11)</span><span>9</span></div>
+</section>
+
+<!-- 10 ─ honest limit -->
+<section class="slide">
+  <div class="kicker">Evidence 3 · where we are not better</div>
+  <h2>As an alarm, the twin is no better than NEWS2. We measured it.</h2>
+  <div class="grid g2" style="margin-top:6px;align-items:center">
+    <div>{{CURVE_SVG}}</div>
+    <div>
+      <p>Both systems replayed round by round on {{EVENTS}} deteriorations, thresholds swept. At matched alarm burden, NEWS2 catches as many or more.</p>
+      <p>With one or two readings, a downward trend isn't knowable yet — the twin misses some early slides.</p>
+      <p style="color:var(--ink);font-size:24px;margin-top:20px"><b>So Prahari sits behind the score.</b> NEWS2 says who. The twin says what kind, what to do, and what waiting costs.</p>
+    </div>
+  </div>
+  <div class="foot"><span>We withdrew an earlier "81% fewer alarms" claim when a fair comparison didn't support it</span><span>10</span></div>
+</section>
+
+<!-- 11 ─ real data -->
+<section class="slide">
+  <div class="kicker">Evidence 4 · real patients, real wear data</div>
+  <h2>We tested it where it could fail — and it did, in useful ways.</h2>
+  <div class="grid g2" style="margin-top:6px">
+    <div class="card">
+      <div class="lab" style="margin:0;color:var(--ink)">MIMIC-IV · {{RM_STAYS}} REAL HEART-FAILURE ICU STAYS</div>
+      <table style="margin-top:12px;font-size:16px">
+        <tr><th>Twin vs withheld measurement</th><th style="text-align:right">Stays</th><th style="text-align:right">r</th></tr>
+        <tr><td>Central venous pressure</td><td class="r">{{RM_CVP_STAYS}}</td><td class="r">{{RM_CVP_R}}</td></tr>
+        <tr><td>Cardiac index</td><td class="r">{{RM_CI_STAYS}}</td><td class="r">{{RM_CI_R}}</td></tr>
+        <tr><td>Wedge vs PA diastolic</td><td class="r">{{RM_PA_STAYS}}</td><td class="r">{{RM_PA_R}}</td></tr>
+      </table>
+      <p style="margin-top:14px;font-size:17px"><b>Moves with real measurements, but reads patients as less sick than they are</b> — the unsafe direction. 4-hour vital-sign forecasts don't beat "no change" ({{RM_FC_TWIN}} vs {{RM_FC_PERS}} mmHg).</p>
+    </div>
+    <div class="card">
+      <div class="lab" style="margin:0;color:var(--ink)">AT HOME · {{H_PATIENTS}} PATIENTS ON REAL FITBIT NOISE</div>
+      <table style="margin-top:12px;font-size:16px">
+        <tr><th>Detector</th><th style="text-align:right">Caught ahead</th><th style="text-align:right">Days</th></tr>
+        <tr><td>"2 kg in 3 days" rule</td><td class="r">{{H_W3}}</td><td class="r">{{H_W3_LEAD}}</td></tr>
+        <tr><td>"2 kg over first week"</td><td class="r">{{H_WD}}</td><td class="r">{{H_WD_LEAD}}</td></tr>
+        <tr><td>Home twin, band + scale</td><td class="r">{{H_TW}}</td><td class="r">{{H_TW_LEAD}}</td></tr>
+        <tr><td>Home twin, band only</td><td class="r">{{H_TB}}</td><td class="r">{{H_TB_LEAD}}</td></tr>
+      </table>
+      <p style="margin-top:14px;font-size:17px">On <b>real</b> volunteers' records: {{H_RFA_S}} false alarms with a scale, {{H_RFA_B}} on the band alone — <b>too many to use the band by itself</b>.</p>
+    </div>
+  </div>
+  <p style="margin-top:22px">Small samples, reported as they came out. The next step is the full MIMIC-IV database with a proper train/test split.</p>
+  <div class="foot"><span>MIMIC-IV demo v2.2, PhysioNet (ODbL) · Fitbit, Zenodo 10.5281/zenodo.53894 (CC BY 4.0)</span><span>11</span></div>
+</section>
+
+<!-- 12 ─ home -->
+<section class="slide">
+  <div class="kicker">After discharge</div>
+  <h2>The same heart goes home — and says how many days it has left.</h2>
+  <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:26px;margin-top:4px;align-items:start">
+    <img class="shot" src="../img/home.png" style="width:100%" alt="The twin at home: forecast, fluid against this heart's limit, and three home plans">
+    <div>
+      <p style="margin-top:0"><b>A week of band and scale data,</b> read by the ward-fitted heart: resting heart rate, HRV, sleep, time awake in bed, steps, weight.</p>
+      <p><b>Each heart has its own limit</b> — {{H_RANGE}} litres retained. Weak hearts go home fuller and tip over sooner.</p>
+      <p><b>Forecast at the first alarm</b> off by {{H_MAE}} days; the true day inside its range {{H_COV}} of the time.</p>
+      <p><b>Wait or act, in days:</b> fluid restriction or a doubled diuretic, run on the same heart.</p>
+    </div>
+  </div>
+  <div class="foot"><span>A week of band and scale data, read by a twin rather than a score</span><span>12</span></div>
+</section>
+
+<!-- 13 ─ India -->
+<section class="slide">
+  <div class="kicker">Built for here</div>
+  <h2>Designed around what an Indian ward actually has.</h2>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card"><p style="margin:0"><b>No new hardware.</b> Fitted from the 4-hourly chart and bedside signs — no telemetry, no catheter.</p></div>
+    <div class="card"><p style="margin:0"><b>The twin goes home.</b> A ₹2,000 band and a bathroom scale — no clinic visit — and it counts the days to decompensation.</p></div>
+    <div class="card"><p style="margin:0"><b>Registry-shaped patients.</b> Younger, sicker, rheumatic disease still present, heavy diabetes overlap.</p></div>
+    <div class="card"><p style="margin:0"><b>Pharmacogenomics.</b> CYP2D6 phenotype changes the simulated beta-blocker response.</p></div>
+    <div class="card"><p style="margin:0"><b>Food is physiology.</b> A rice-heavy dinner drives glucose and sympathetic load in diabetic heart failure; millet cuts both.</p></div>
+    <div class="card"><p style="margin:0"><b>Runs on a laptop.</b> No GPU, no cloud, no patient data needed to train.</p></div>
+  </div>
+  <div class="foot"><span>Open source · MIT</span><span>13</span></div>
+</section>
+
+<!-- 14 ─ limits -->
+<section class="slide">
+  <div class="kicker">Honest limits · next steps</div>
+  <h2>What this is, and what it is not.</h2>
+  <div class="grid g2" style="margin-top:14px">
+    <div>
+      <p><b>Not clinically validated.</b> The simulated results are an upper bound; on real ICU patients the twin is miscalibrated towards "less sick" and its drug effect sizes are uncalibrated.</p>
+      <p><b>Not a better alarm.</b> It sits behind NEWS2. At home the band alone false-alarms too often; with a scale it matches the best weight rule.</p>
+      <p><b>Not an order-giver.</b> It advises and explains; the doctor decides.</p>
+    </div>
+    <div>
+      <p><b>Next:</b> the full, credentialed MIMIC-IV — recalibrate on a training split, test on the rest.</p>
+      <p><b>Then:</b> silent shadow mode on a ward — the twin predicts, nobody acts on it, we compare.</p>
+      <p><b>Model:</b> infusion titration and repeat dosing; right-heart physiology.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Digital-twin maturity: we build simulation + clinician-in-the-loop, and refuse automation</span><span>14</span></div>
+</section>
+
+<!-- 15 ─ close -->
+<section class="slide">
+  <div class="kicker">Prahari</div>
+  <h1 style="margin-top:120px;font-size:72px;max-width:1000px">Who to see first. What kind of sick. What waiting will cost.</h1>
+  <p style="margin-top:28px;font-size:22px">{{REPO}}</p>
+  <svg class="trace" viewBox="0 0 1280 90" preserveAspectRatio="none" style="bottom:70px"><path d="M0 60 H210 l12-38 14 70 12-52 8 20 H520 l12-38 14 70 12-52 8 20 H830 l12-38 14 70 12-52 8 20 H1280" fill="none" stroke="#2be374" stroke-width="2.4" stroke-linejoin="round"/></svg>
+  <div class="foot"><span>{{TEAM}}</span><span>{{COLLEGE}}</span></div>
+</section>
+
+</body>
+</html>

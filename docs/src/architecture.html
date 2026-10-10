@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Prahari — architecture</title>
+<link rel="stylesheet" href="../../web/fonts/fonts.css">
+<style>
+  @page { size: 297mm 210mm; margin: 0; }
+  html, body { margin: 0; background: #05080b; }
+  body { width: 1123px; height: 794px; overflow: hidden; }
+  svg { display: block; }
+  .h1 { font: 700 26px "Barlow Condensed", sans-serif; letter-spacing: .14em; fill: #dce5ed; }
+  .h2 { font: 600 11px "IBM Plex Mono", monospace; letter-spacing: .14em; fill: #6c7c8b; }
+  .ttl { font: 600 13.5px "IBM Plex Sans", sans-serif; fill: #dce5ed; }
+  .tx { font: 400 11px "IBM Plex Sans", sans-serif; fill: #97a6b4; }
+  .mono { font: 400 10.5px "IBM Plex Mono", monospace; fill: #97a6b4; }
+  .tag { font: 600 9.5px "IBM Plex Mono", monospace; letter-spacing: .1em; }
+  .box { fill: #0a1016; stroke: #223140; stroke-width: 1; }
+  .core { fill: #0b1611; stroke: #2be374; stroke-width: 1.2; }
+  .arrow { stroke: #5c6c7b; stroke-width: 1.4; fill: none; marker-end: url(#a); }
+  .arrow.hot { stroke: #2be374; marker-end: url(#ag); }
+  .dash { stroke-dasharray: 4 4; }
+</style>
+</head>
+<body>
+<svg width="1123" height="794" viewBox="0 0 1123 794" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5c6c7b"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2be374"/></marker>
+  </defs>
+
+  <!-- title -->
+  <text x="36" y="50" class="h1">PRAHARI</text>
+  <text x="152" y="50" class="tx" style="font-size:14px;fill:#97a6b4">a digital twin per bed, for the cardiac step-down ward</text>
+  <path d="M912 38h26l6-14 8 26 6-16 4 6h24" fill="none" stroke="#2be374" stroke-width="2" stroke-linejoin="round"/>
+  <text x="1087" y="50" class="h2" text-anchor="end">ARCHITECTURE</text>
+
+  <!-- column heads -->
+  <text x="36" y="96" class="h2">1 · WHAT THE WARD HAS</text>
+  <text x="306" y="96" class="h2">2 · ASSIMILATE</text>
+  <text x="552" y="96" class="h2">3 · THE TWIN</text>
+  <text x="808" y="96" class="h2">4 · FORK AND DECIDE</text>
+
+  <!-- ===== column 1: inputs ===== -->
+  <rect x="36" y="110" width="238" height="150" class="box"/>
+  <text x="50" y="132" class="tag" fill="#38c6ff">STATIC · EHR</text>
+  <text x="50" y="152" class="ttl">Admission record</text>
+  <text x="50" y="172" class="tx">Age, sex, body surface area</text>
+  <text x="50" y="188" class="tx">Diagnosis, aetiology, LVEF, NYHA</text>
+  <text x="50" y="204" class="tx">BNP, creatinine, Na, K, Hb, HbA1c</text>
+  <text x="50" y="220" class="tx">Home medication</text>
+  <text x="50" y="236" class="tx">CYP2D6 genotype → drug response</text>
+  <text x="50" y="252" class="mono" style="fill:#5c6c7b">sets priors and patient constants</text>
+
+  <rect x="36" y="276" width="238" height="190" class="box"/>
+  <text x="50" y="298" class="tag" fill="#2be374">DYNAMIC · BEDSIDE MONITOR</text>
+  <text x="50" y="318" class="ttl">Charted every 4 hours</text>
+  <text x="50" y="338" class="tx">HR · BP · SpO₂ · resp. rate (monitor)</text>
+  <text x="50" y="358" class="tx">JVP · oedema · weight (ward round)</text>
+  <text x="62" y="374" class="mono" style="fill:#5c6c7b">→ identify congestion (wet / dry)</text>
+  <text x="50" y="394" class="tx">Capillary refill time</text>
+  <text x="62" y="410" class="mono" style="fill:#5c6c7b">→ identifies perfusion (warm / cold)</text>
+  <text x="50" y="432" class="tx">Noisy, rounded, ~10% of rounds missed</text>
+  <text x="50" y="454" class="mono" style="fill:#5c6c7b">no networked telemetry, no catheter</text>
+
+  <rect x="36" y="482" width="238" height="112" class="box"/>
+  <text x="50" y="504" class="tag" fill="#ffd23c">AT HOME · WEARABLES</text>
+  <text x="50" y="524" class="ttl">A ₹2,000 band + a scale</text>
+  <text x="50" y="544" class="tx">Resting HR · HRV · sleep · steps · weight</text>
+  <text x="50" y="560" class="tx">read from an Apple Health export</text>
+  <text x="50" y="582" class="mono" style="fill:#5c6c7b">same heart → days to decompensation</text>
+
+  <!-- ===== column 2: assimilation ===== -->
+  <rect x="306" y="110" width="214" height="356" class="box"/>
+  <text x="320" y="134" class="ttl">Learned inverse</text>
+  <text x="320" y="154" class="tx">Gradient boosting trained on</text>
+  <text x="320" y="170" class="tx">6,000 simulated physiologies —</text>
+  <text x="320" y="186" class="tx">no patient data needed</text>
+  <text x="320" y="204" class="mono" style="fill:#5c6c7b">→ fast first guess</text>
+  <line x1="320" y1="222" x2="506" y2="222" stroke="#16202a"/>
+  <text x="320" y="246" class="ttl">Joint trajectory fit</text>
+  <text x="320" y="266" class="tx">Every reading fitted at once,</text>
+  <text x="320" y="282" class="tx">weighted by its measurement noise,</text>
+  <text x="320" y="298" class="tx">older readings weighted less</text>
+  <text x="320" y="316" class="mono" style="fill:#5c6c7b">bounded least squares + priors</text>
+  <line x1="320" y1="334" x2="506" y2="334" stroke="#16202a"/>
+  <text x="320" y="358" class="ttl">Out</text>
+  <text x="320" y="378" class="tx">Contractility, resistance, volume,</text>
+  <text x="320" y="394" class="tx">lung water, arterial compliance</text>
+  <text x="320" y="414" class="tx">+ trends: is the heart failing?</text>
+  <text x="320" y="434" class="tx">+ confidence: can it say</text>
+  <text x="320" y="450" class="tx" style="fill:#dce5ed">"I don't know"?</text>
+
+  <!-- ===== column 3: twin core ===== -->
+  <rect x="552" y="110" width="224" height="356" class="core"/>
+  <text x="566" y="134" class="tag" fill="#2be374">PHYSICS · NOT A BLACK BOX</text>
+  <text x="566" y="156" class="ttl">Lumped-parameter heart</text>
+  <text x="566" y="176" class="mono">SV = Ees(EDV − V₀)/(Ees + Ea)</text>
+  <text x="566" y="200" class="tx">Ventricular–arterial coupling</text>
+  <text x="566" y="216" class="tx">Saturating Frank–Starling curve</text>
+  <text x="566" y="232" class="tx">Congestion penalty on contractility</text>
+  <text x="566" y="248" class="tx">Baroreflex on heart rate and SVR</text>
+  <text x="566" y="264" class="tx">Cardiorenal fluid balance</text>
+  <text x="566" y="280" class="tx">Pulmonary filtration → SpO₂</text>
+  <line x1="566" y1="298" x2="762" y2="298" stroke="#16322a"/>
+  <text x="566" y="322" class="ttl">A runnable copy of one patient</text>
+  <text x="566" y="342" class="tx">① state fitted to this patient</text>
+  <text x="566" y="358" class="tx">② simulates forward in time</text>
+  <text x="566" y="374" class="tx">③ forks under any decision</text>
+  <text x="566" y="390" class="tx">④ re-syncs at every reading, and</text>
+  <text x="580" y="406" class="tx">keeps running between them</text>
+  <text x="566" y="432" class="mono" style="fill:#2be374">reads out as a Stevenson profile:</text>
+  <text x="566" y="450" class="mono" style="fill:#2be374">wet/dry × warm/cold</text>
+
+  <!-- ===== column 4: fork + decide ===== -->
+  <rect x="808" y="110" width="279" height="164" class="box"/>
+  <text x="822" y="132" class="tag" fill="#ffae1a">COUNTERFACTUAL ENGINE</text>
+  <text x="822" y="152" class="ttl">Every drug is a parameter lever</text>
+  <text x="822" y="172" class="tx">Diuretic → volume · nitrate → SVR, preload</text>
+  <text x="822" y="188" class="tx">Inotrope → contractility · pressor → SVR</text>
+  <text x="822" y="204" class="tx">Fluids → volume · β-blocker → HR (×CYP2D6)</text>
+  <text x="822" y="224" class="tx">Onset, plateau and washout per agent</text>
+  <text x="822" y="248" class="ttl" style="font-size:12.5px">Act now  ·  act in N hours  ·  wait</text>
+  <text x="822" y="266" class="mono" style="fill:#5c6c7b">forked from the patient as they are now</text>
+
+  <rect x="808" y="290" width="279" height="176" class="box"/>
+  <text x="822" y="312" class="tag" fill="#ff4b4b">DECISION LAYER</text>
+  <text x="822" y="332" class="ttl">Behind the early-warning score</text>
+  <text x="822" y="352" class="tx">NEWS2 already says who is sick.</text>
+  <text x="822" y="368" class="tx">The twin says what kind of sick —</text>
+  <text x="822" y="384" class="tx">warm-wet, cold-wet, cold-dry — and</text>
+  <text x="822" y="400" class="tx">what acting or waiting will do.</text>
+  <text x="822" y="422" class="tx">Deadline to cold-wet · escalation rule</text>
+  <text x="822" y="438" class="tx">Ranks the ward: who to see first</text>
+  <text x="822" y="456" class="mono" style="fill:#5c6c7b">advises; never issues orders</text>
+
+  <!-- ===== station ===== -->
+  <rect x="306" y="482" width="781" height="112" class="box" style="stroke:#38c6ff"/>
+  <text x="320" y="504" class="tag" fill="#38c6ff">CLINICIAN STATION</text>
+  <text x="320" y="526" class="ttl">Ward view — every bed, live traces, NEWS2 beside the twin's reading, ranked</text>
+  <text x="320" y="548" class="tx">Patient view · haemodynamic map · wait-or-act · trends with forecast band · record · handover brief · the twin at home</text>
+  <text x="320" y="570" class="mono" style="fill:#5c6c7b">FastAPI + hand-written browser client · runs on any laptop · no GPU, no cloud, no patient data needed to run</text>
+
+  <!-- arrows -->
+  <path d="M274 185 H300" class="arrow"/>
+  <path d="M274 371 H300" class="arrow"/>
+  <path d="M274 538 H290 V440 H300" class="arrow dash"/>
+  <path d="M520 288 H546" class="arrow hot"/>
+  <path d="M776 190 H802" class="arrow hot"/>
+  <path d="M776 380 H802" class="arrow hot"/>
+  <path d="M947 466 V476" class="arrow"/>
+
+  <!-- ===== validation ===== -->
+  <rect x="36" y="612" width="1051" height="170" class="box" style="fill:#080c10"/>
+  <text x="50" y="634" class="tag" fill="#97a6b4">HOW WE KNOW — SIMULATED GROUND TRUTH, THEN REAL DATA</text>
+  <g transform="translate(50,648)">
+    <rect width="190" height="80" fill="#0c1218" stroke="#223140"/>
+    <text x="12" y="22" class="ttl" style="font-size:12.5px">Simulated ward</text>
+    <text x="12" y="42" class="tx">Registry-shaped patients,</text>
+    <text x="12" y="58" class="tx">true physiology known</text>
+    <path d="M190 40 H216" class="arrow"/>
+    <rect x="222" width="190" height="80" fill="#0c1218" stroke="#223140"/>
+    <text x="234" y="22" class="ttl" style="font-size:12.5px">Ward degrader</text>
+    <text x="234" y="42" class="tx">4-hourly, noisy, rounded,</text>
+    <text x="234" y="58" class="tx">10% of rounds missed</text>
+    <path d="M412 40 H438" class="arrow"/>
+    <rect x="444" width="150" height="80" fill="#0c1218" stroke="#223140"/>
+    <text x="456" y="22" class="ttl" style="font-size:12.5px">Twin sees</text>
+    <text x="456" y="42" class="tx">only the chart —</text>
+    <text x="456" y="58" class="tx">never the truth</text>
+    <path d="M594 40 H620" class="arrow"/>
+    <rect x="626" width="375" height="80" fill="#0c1218" stroke="#223140"/>
+    <text x="638" y="22" class="ttl" style="font-size:12.5px">Scored against the truth</text>
+    <text x="638" y="42" class="tx">① hidden state at 4-hourly vs hourly charting</text>
+    <text x="638" y="58" class="tx">② every drug given to twin and to "real" patient</text>
+    <text x="638" y="74" class="tx">③ round-by-round replay and alarm curves vs NEWS2</text>
+  </g>
+  <text x="50" y="766" class="tx" style="fill:#dce5ed">Then on real data:</text>
+  <text x="160" y="766" class="tx">32 heart-failure ICU stays from MIMIC-IV (CVP, cardiac output and PA pressure withheld as answer keys) · 11 Fitbit volunteers read through Apple Health exports</text>
+</svg>
+</body>
+</html>

@@ -1,0 +1,549 @@
+{
+  "wards": 12,
+  "beds_per_ward": 8,
+  "state_recovery": {
+    "icu": {
+      "n": 96,
+      "ci_mae": 0.16887836001647186,
+      "pcwp_mae": 0.8747924855766397,
+      "quadrant_acc": 0.9583333333333334,
+      "wet_acc": 0.9791666666666666,
+      "cold_acc": 0.9791666666666666,
+      "confidence": 0.8860485856022905,
+      "obs_per_patient": 15.364583333333334
+    },
+    "ward": {
+      "n": 96,
+      "ci_mae": 0.2797673174547019,
+      "pcwp_mae": 1.6012207729204242,
+      "quadrant_acc": 0.8333333333333334,
+      "wet_acc": 0.90625,
+      "cold_acc": 0.9270833333333334,
+      "confidence": 0.7817273343993668,
+      "obs_per_patient": 4.416666666666667
+    }
+  },
+  "counterfactual": {
+    "decisions": 255,
+    "direction_accuracy": 0.9886363636363636,
+    "direction_n": 3080,
+    "effect_ci_mae": 0.11564455700447467,
+    "effect_pcwp_mae": 0.3535382342934371,
+    "effect_ci_corr": 0.973716166266634,
+    "top1_agreement": 0.6901960784313725,
+    "regret_twin": 0.005257554906870148,
+    "regret_reflex": 0.15278481210284814,
+    "regret_wait": 0.05761150825370357,
+    "regret_news2_reflex": 0.04730303823482619,
+    "by_true_quadrant": {
+      "A": {
+        "n": 70,
+        "furo_helps": 0,
+        "furo_harms": 70,
+        "twin_right": 59
+      },
+      "B": {
+        "n": 89,
+        "furo_helps": 64,
+        "furo_harms": 25,
+        "twin_right": 76
+      },
+      "L": {
+        "n": 34,
+        "furo_helps": 0,
+        "furo_harms": 34,
+        "twin_right": 31
+      },
+      "C": {
+        "n": 62,
+        "furo_helps": 49,
+        "furo_harms": 0,
+        "twin_right": 57
+      }
+    },
+    "reflex_harm_cases": 129,
+    "twin_harm_in_those": 7
+  },
+  "prospective": {
+    "rounds_scored": 602,
+    "deteriorations": 29,
+    "state_ci_mae": 0.26579132030849184,
+    "state_pcwp_mae": 1.4722104616911327,
+    "news2": {
+      "alarms": 325,
+      "alarms_per_patient_day": 3.239202657807309,
+      "ppv": 0.5846153846153846,
+      "sensitivity": 0.9310344827586207,
+      "caught": 27,
+      "median_lead_h": 5.0
+    },
+    "prahari": {
+      "alarms": 191,
+      "alarms_per_patient_day": 1.903654485049834,
+      "ppv": 0.8691099476439791,
+      "sensitivity": 0.6206896551724138,
+      "caught": 18,
+      "median_lead_h": 3.875
+    }
+  },
+  "operating_curves": {
+    "events": 29,
+    "patient_days": 100.33333333333333,
+    "news2": [
+      {
+        "threshold": 3,
+        "alarms_per_patient_day": 3.6279069767441863,
+        "sensitivity": 0.9310344827586207,
+        "ppv": 0.5439560439560439,
+        "median_lead_h": 7.25
+      },
+      {
+        "threshold": 4,
+        "alarms_per_patient_day": 3.408637873754153,
+        "sensitivity": 0.9310344827586207,
+        "ppv": 0.5730994152046783,
+        "median_lead_h": 5.25
+      },
+      {
+        "threshold": 5,
+        "alarms_per_patient_day": 3.239202657807309,
+        "sensitivity": 0.9310344827586207,
+        "ppv": 0.5846153846153846,
+        "median_lead_h": 5.0
+      },
+      {
+        "threshold": 6,
+        "alarms_per_patient_day": 2.292358803986711,
+        "sensitivity": 0.8620689655172413,
+        "ppv": 0.8,
+        "median_lead_h": 4.75
+      },
+      {
+        "threshold": 7,
+        "alarms_per_patient_day": 1.9435215946843856,
+        "sensitivity": 0.7931034482758621,
+        "ppv": 0.9128205128205128,
+        "median_lead_h": 3.25
+      },
+      {
+        "threshold": 8,
+        "alarms_per_patient_day": 1.6744186046511629,
+        "sensitivity": 0.5517241379310345,
+        "ppv": 0.9642857142857143,
+        "median_lead_h": 3.5
+      },
+      {
+        "threshold": 9,
+        "alarms_per_patient_day": 1.504983388704319,
+        "sensitivity": 0.3448275862068966,
+        "ppv": 0.9801324503311258,
+        "median_lead_h": 3.375
+      }
+    ],
+    "prahari": [
+      {
+        "threshold_h": 0,
+        "alarms_per_patient_day": 1.495016611295681,
+        "sensitivity": 0.3448275862068966,
+        "ppv": 0.96,
+        "median_lead_h": 2.25
+      },
+      {
+        "threshold_h": 2,
+        "alarms_per_patient_day": 1.584717607973422,
+        "sensitivity": 0.3793103448275862,
+        "ppv": 0.9371069182389937,
+        "median_lead_h": 3.0
+      },
+      {
+        "threshold_h": 4,
+        "alarms_per_patient_day": 1.6345514950166113,
+        "sensitivity": 0.4482758620689655,
+        "ppv": 0.9329268292682927,
+        "median_lead_h": 3.0
+      },
+      {
+        "threshold_h": 6,
+        "alarms_per_patient_day": 1.73421926910299,
+        "sensitivity": 0.5172413793103449,
+        "ppv": 0.9022988505747126,
+        "median_lead_h": 4.0
+      },
+      {
+        "threshold_h": 8,
+        "alarms_per_patient_day": 1.8039867109634553,
+        "sensitivity": 0.5862068965517241,
+        "ppv": 0.9005524861878453,
+        "median_lead_h": 4.0
+      },
+      {
+        "threshold_h": 10,
+        "alarms_per_patient_day": 1.8837209302325582,
+        "sensitivity": 0.6551724137931034,
+        "ppv": 0.8835978835978836,
+        "median_lead_h": 4.0
+      },
+      {
+        "threshold_h": 12,
+        "alarms_per_patient_day": 1.973421926910299,
+        "sensitivity": 0.6551724137931034,
+        "ppv": 0.8585858585858586,
+        "median_lead_h": 4.5
+      },
+      {
+        "threshold_h": 16,
+        "alarms_per_patient_day": 2.1029900332225915,
+        "sensitivity": 0.6896551724137931,
+        "ppv": 0.8199052132701422,
+        "median_lead_h": 4.625
+      },
+      {
+        "threshold_h": 20,
+        "alarms_per_patient_day": 2.2624584717607976,
+        "sensitivity": 0.7586206896551724,
+        "ppv": 0.7841409691629956,
+        "median_lead_h": 5.25
+      },
+      {
+        "threshold_h": 24,
+        "alarms_per_patient_day": 2.431893687707641,
+        "sensitivity": 0.7931034482758621,
+        "ppv": 0.7459016393442623,
+        "median_lead_h": 5.0
+      }
+    ]
+  },
+  "real_mimic": {
+    "cohort": {
+      "stays": 32,
+      "patients": 22,
+      "rounds": 1004,
+      "median_los_days": 4.127777777777778,
+      "median_age": 71.0,
+      "women": 13
+    },
+    "held_out": {
+      "cvp": {
+        "n": 57,
+        "r": 0.2975400281362198,
+        "mae": 5.011123835330288,
+        "bias": -3.7430861684078383,
+        "stays": 10,
+        "points_per_stay": [
+          21,
+          9,
+          9,
+          4,
+          4,
+          4,
+          3,
+          1,
+          1,
+          1
+        ]
+      },
+      "ci": {
+        "n": 27,
+        "r": 0.6238685817312021,
+        "mae": 0.7077352996070777,
+        "bias": 0.5831558596128996,
+        "stays": 3,
+        "points_per_stay": [
+          25,
+          1,
+          1
+        ]
+      },
+      "pa_dia": {
+        "n": 9,
+        "r": 0.5250202460036403,
+        "mae": 4.235112686707879,
+        "bias": -3.000684620998859,
+        "stays": 3,
+        "points_per_stay": [
+          4,
+          4,
+          1
+        ]
+      },
+      "cold_confusion": {
+        "tp": 0,
+        "fn": 2,
+        "fp": 2,
+        "tn": 23
+      }
+    },
+    "forecast": {
+      "forecasts": 909,
+      "with_drug_starts": 140,
+      "hr": {
+        "twin": 9.51943358048395,
+        "twin_no_drugs": 9.081278530877942,
+        "persistence": 8.199119911991199,
+        "twin_beats_persistence": 0.4081408140814081
+      },
+      "sbp": {
+        "twin": 15.19378870395751,
+        "twin_no_drugs": 14.835299458540655,
+        "persistence": 12.6006600660066,
+        "twin_beats_persistence": 0.42244224422442245
+      },
+      "dbp": {
+        "twin": 9.440122822332565,
+        "twin_no_drugs": 9.185573248378248,
+        "persistence": 9.517051705170518,
+        "twin_beats_persistence": 0.5148514851485149
+      },
+      "map": {
+        "twin": 10.191566993803942,
+        "twin_no_drugs": 9.933753397625924,
+        "persistence": 9.256325632563255,
+        "twin_beats_persistence": 0.47194719471947194
+      },
+      "map_direction": {
+        "n": 562,
+        "accuracy": 0.597864768683274
+      }
+    },
+    "concordance": {
+      "all_rounds": {
+        "n": 972,
+        "wet": 0.5761316872427984,
+        "cold": 0.04938271604938271
+      },
+      "furosemide": {
+        "n": 82,
+        "wet": 0.573170731707317,
+        "cold": 0.07317073170731707
+      },
+      "inotrope": {
+        "n": 6,
+        "wet": 0.8333333333333334,
+        "cold": 0.3333333333333333
+      },
+      "vasopressor": {
+        "n": 44,
+        "wet": 0.45454545454545453,
+        "cold": 0.11363636363636363
+      }
+    }
+  },
+  "home": {
+    "cohort": {
+      "patients": 96,
+      "stable": 96,
+      "retaining": 96,
+      "follow_up_days": 30,
+      "real_noise": true
+    },
+    "event_fluid": {
+      "patients": 96,
+      "median_abs_ml": 175.0,
+      "bias_ml": -163.54166666666666,
+      "true_range_ml": [
+        2200.0,
+        3800.0
+      ]
+    },
+    "simulated": {
+      "band_and_scale": {
+        "weight_3d": {
+          "label": "Weight rule: +2 kg in 3 days",
+          "false_alarm_rate": 0.0,
+          "stable_ever_flagged": 0,
+          "stable": 96,
+          "eligible": 91,
+          "detected": 17,
+          "sensitivity": 0.18681318681318682,
+          "median_lead_days": 4.0,
+          "caught_only_after_event": 15,
+          "censored": 5
+        },
+        "weight_dry": {
+          "label": "Weight rule: +2 kg over first week",
+          "false_alarm_rate": 0.004528985507246377,
+          "stable_ever_flagged": 4,
+          "stable": 96,
+          "eligible": 91,
+          "detected": 84,
+          "sensitivity": 0.9230769230769231,
+          "median_lead_days": 4.5,
+          "caught_only_after_event": 7,
+          "censored": 5
+        },
+        "drift": {
+          "label": "Drift score (previous)",
+          "false_alarm_rate": 0.014039855072463768,
+          "stable_ever_flagged": 17,
+          "stable": 96,
+          "eligible": 91,
+          "detected": 35,
+          "sensitivity": 0.38461538461538464,
+          "median_lead_days": 3.0,
+          "caught_only_after_event": 51,
+          "censored": 5
+        },
+        "twin": {
+          "label": "Home twin",
+          "false_alarm_rate": 0.005434782608695652,
+          "stable_ever_flagged": 9,
+          "stable": 96,
+          "eligible": 91,
+          "detected": 91,
+          "sensitivity": 1.0,
+          "median_lead_days": 6.0,
+          "caught_only_after_event": 0,
+          "censored": 5
+        },
+        "twin_sweep": [
+          {
+            "threshold": 0.3,
+            "false_alarm_rate": 0.014039855072463768,
+            "sensitivity": 1.0,
+            "median_lead_days": 6.0
+          },
+          {
+            "threshold": 0.5,
+            "false_alarm_rate": 0.005434782608695652,
+            "sensitivity": 1.0,
+            "median_lead_days": 6.0
+          },
+          {
+            "threshold": 0.7,
+            "false_alarm_rate": 0.0,
+            "sensitivity": 0.989010989010989,
+            "median_lead_days": 5.0
+          },
+          {
+            "threshold": 0.9,
+            "false_alarm_rate": 0.0,
+            "sensitivity": 0.9340659340659341,
+            "median_lead_days": 3.0
+          }
+        ]
+      },
+      "band_only": {
+        "drift": {
+          "label": "Drift score (previous)",
+          "false_alarm_rate": 0.008152173913043478,
+          "stable_ever_flagged": 13,
+          "stable": 96,
+          "eligible": 91,
+          "detected": 7,
+          "sensitivity": 0.07692307692307693,
+          "median_lead_days": 3.0,
+          "caught_only_after_event": 46,
+          "censored": 5
+        },
+        "twin": {
+          "label": "Home twin",
+          "false_alarm_rate": 0.052083333333333336,
+          "stable_ever_flagged": 30,
+          "stable": 96,
+          "eligible": 91,
+          "detected": 61,
+          "sensitivity": 0.6703296703296703,
+          "median_lead_days": 4.0,
+          "caught_only_after_event": 28,
+          "censored": 5
+        },
+        "twin_sweep": [
+          {
+            "threshold": 0.3,
+            "false_alarm_rate": 0.11096014492753623,
+            "sensitivity": 0.7472527472527473,
+            "median_lead_days": 6.0
+          },
+          {
+            "threshold": 0.5,
+            "false_alarm_rate": 0.052083333333333336,
+            "sensitivity": 0.6703296703296703,
+            "median_lead_days": 4.0
+          },
+          {
+            "threshold": 0.7,
+            "false_alarm_rate": 0.029438405797101448,
+            "sensitivity": 0.5604395604395604,
+            "median_lead_days": 3.0
+          },
+          {
+            "threshold": 0.9,
+            "false_alarm_rate": 0.007699275362318841,
+            "sensitivity": 0.42857142857142855,
+            "median_lead_days": 3.0
+          }
+        ]
+      }
+    },
+    "at_alarm": {
+      "alarms": 91,
+      "days_to_event_mae": 2.1727041195383996,
+      "interval_coverage": 0.8901098901098901,
+      "plan_agreement": {
+        "no_change": 0.978021978021978,
+        "restrict": 0.6373626373626373,
+        "diuretic": 0.8681318681318682
+      },
+      "restriction_days_gained_true": 3.661666683521929,
+      "restriction_days_gained_twin": 5.5
+    },
+    "real": {
+      "users": 11,
+      "hearts": 8,
+      "onset_day": 12,
+      "apple_health_roundtrip": "11/11",
+      "band_only": {
+        "drift": {
+          "label": "Drift score (previous)",
+          "false_alarm_rate": 0.01233183856502242,
+          "user_days": 1784,
+          "injected": 48,
+          "detected": 32,
+          "median_days_to_detect": 12.5
+        },
+        "twin": {
+          "label": "Home twin",
+          "false_alarm_rate": 0.03867713004484305,
+          "user_days": 1784,
+          "injected": 48,
+          "detected": 27,
+          "median_days_to_detect": 12.0
+        }
+      },
+      "band_and_scale": {
+        "weight_3d": {
+          "label": "Weight rule: +2 kg in 3 days",
+          "false_alarm_rate": 0.0,
+          "user_days": 1784,
+          "injected": 48,
+          "detected": 0,
+          "median_days_to_detect": null
+        },
+        "weight_dry": {
+          "label": "Weight rule: +2 kg over first week",
+          "false_alarm_rate": 0.0,
+          "user_days": 1784,
+          "injected": 48,
+          "detected": 48,
+          "median_days_to_detect": 12.0
+        },
+        "drift": {
+          "label": "Drift score (previous)",
+          "false_alarm_rate": 0.01961883408071749,
+          "user_days": 1784,
+          "injected": 48,
+          "detected": 38,
+          "median_days_to_detect": 10.0
+        },
+        "twin": {
+          "label": "Home twin",
+          "false_alarm_rate": 0.00616591928251121,
+          "user_days": 1784,
+          "injected": 48,
+          "detected": 47,
+          "median_days_to_detect": 9.0
+        }
+      }
+    }
+  }
+}
